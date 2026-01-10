@@ -23,11 +23,11 @@ public:
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
 public:
-		UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UResourceAttributeSet, Mana)
 
-		UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UResourceAttributeSet, MaxMana)
 };
