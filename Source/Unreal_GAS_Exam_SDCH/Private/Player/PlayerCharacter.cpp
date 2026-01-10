@@ -96,7 +96,6 @@ void APlayerCharacter::OnMaxManaAttrChanged(const FOnAttributeChangeData& Data)
 
 void APlayerCharacter::SpellFireball()
 {
-	UE_LOG(LogTemp, Log, TEXT("Try Spell Fireball"));
 	if (AbilitySystemComponent)
 	{
 		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::Fireball));

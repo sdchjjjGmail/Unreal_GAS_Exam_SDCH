@@ -2,6 +2,9 @@
 
 
 #include "GameAbilitySystem/GA_Fireball.h"
+#include "GameAbilitySystem/Utils/Fireball.h"
+#include "GameFramework/Character.h"
+#include "Components/SphereComponent.h"
 
 UGA_Fireball::UGA_Fireball()
 {
@@ -20,20 +23,41 @@ void UGA_Fireball::ActivateAbility(
 		return;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("Fireball!"));
+	ACharacter* Character = Cast<ACharacter>(ActorInfo->AvatarActor.Get());
+	if (!Character || !ProjectileClass)
+	{
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
+		return;
+	}
 
-	// TODO: 여기서 파이어볼 스폰/발사 로직 넣기 (다음 단계)
-	// 예) SpawnProjectile(), PlayMontage(), etc.
+	const FVector Location =
+		Character->GetMesh()
+		? Character->GetMesh()->GetSocketLocation(TEXT("Head"))
+		: Character->GetActorLocation() + Character->GetActorForwardVector() * 100.f;
+
+	const FRotator SpawnRotation = Character->GetControlRotation();
+
+	FActorSpawnParameters Params;
+	Params.Owner = Character;
+	Params.Instigator = Character;
+
+	AFireball* SpawnedFireball = Character->GetWorld()->SpawnActor<AFireball>(
+		ProjectileClass,
+		Location,
+		SpawnRotation,
+		Params
+	);
+
+	if (SpawnedFireball)
+	{
+		SpawnedFireball->SetOwner(Character);
+		SpawnedFireball->SetInstigator(Character);
+
+		if (USphereComponent* Col = SpawnedFireball->GetCollisionComponent())
+		{
+			Col->IgnoreActorWhenMoving(Character, true);
+		}
+	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
-}
-
-void UGA_Fireball::EndAbility(
-	const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, 
-	const FGameplayAbilityActivationInfo ActivationInfo,
-	bool bReplicateEndAbility,
-	bool bWasCancelled)
-{
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

@@ -24,17 +24,7 @@ protected:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
 
-	virtual void EndAbility(
-		const FGameplayAbilitySpecHandle Handle,
-		const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayAbilityActivationInfo ActivationInfo,
-		bool bReplicateEndAbility,
-		bool bWasCancelled) override;
-
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "GAS")
-	TSubclassOf<class UGameplayEffect> CostEffect;
-
-	UPROPERTY(EditDefaultsOnly, Category = "GAS")
-	TSubclassOf<class UGameplayEffect> CooldownEffect;
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Fireball")
+	TSubclassOf<class AFireball> ProjectileClass;
 };
