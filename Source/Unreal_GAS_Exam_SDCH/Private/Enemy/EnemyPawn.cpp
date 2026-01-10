@@ -2,8 +2,10 @@
 
 
 #include "Enemy/EnemyPawn.h"
+#include "Components/WidgetComponent.h"
 #include "AbilitySystemComponent.h"
 #include "GameAbilitySystem/ResourceAttributeSet.h"
+#include "Interface/HaveHealth.h"
 
 // Sets default values
 AEnemyPawn::AEnemyPawn()
@@ -11,8 +13,19 @@ AEnemyPawn::AEnemyPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Skeletal"));
+	SkeletalMesh->SetupAttachment(GetRootComponent());
+
+	BarWigetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+	BarWigetComponent->SetupAttachment(SkeletalMesh);
+
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
 	ResourceAttributeSet = CreateDefaultSubobject<UResourceAttributeSet>(TEXT("ResourceAttributeSet"));
+}
+
+void AEnemyPawn::TestHealth(float InValue)
+{
+	ResourceAttributeSet->SetHealth(InValue);
 }
 
 // Called when the game starts or when spawned
@@ -31,17 +44,34 @@ void AEnemyPawn::BeginPlay()
 		FOnGameplayAttributeValueChange& onMaxHealthChange =
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetMaxHealthAttribute());
 		onMaxHealthChange.AddUObject(this, &AEnemyPawn::OnMaxHealthChange);
+
+		InitHealth();
+	}
+}
+
+void AEnemyPawn::InitHealth()
+{
+	if (ResourceAttributeSet)
+	{
+		IHaveHealth::Execute_UpdateMaxHealth(BarWigetComponent->GetWidget(), ResourceAttributeSet->GetMaxHealth());
+		IHaveHealth::Execute_UpdateCurrentHealth(BarWigetComponent->GetWidget(), ResourceAttributeSet->GetHealth());
 	}
 }
 
 void AEnemyPawn::OnHealthChange(const FOnAttributeChangeData& InData)
 {
-
+	if (ResourceAttributeSet)
+	{
+		IHaveHealth::Execute_UpdateCurrentHealth(BarWigetComponent->GetWidget(), ResourceAttributeSet->GetHealth());
+	}
 }
 
 void AEnemyPawn::OnMaxHealthChange(const FOnAttributeChangeData& InData)
 {
-
+	if (ResourceAttributeSet)
+	{
+		IHaveHealth::Execute_UpdateMaxHealth(BarWigetComponent->GetWidget(), ResourceAttributeSet->GetMaxHealth());
+	}
 }
 
 // Called to bind functionality to input
