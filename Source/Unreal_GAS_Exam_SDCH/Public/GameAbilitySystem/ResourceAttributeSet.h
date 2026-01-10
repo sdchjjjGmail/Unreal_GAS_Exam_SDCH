@@ -24,6 +24,14 @@ public:
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData Health;
+	ATTRIBUTE_ACCESSORS(UResourceAttributeSet, Health)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData MaxHealth;
+	ATTRIBUTE_ACCESSORS(UResourceAttributeSet, MaxHealth)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UResourceAttributeSet, Mana)
 
