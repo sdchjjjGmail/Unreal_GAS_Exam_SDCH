@@ -43,6 +43,8 @@ private:
 	void OnManaAttrChanged(const FOnAttributeChangeData& Data);
 	void OnMaxManaAttrChanged(const FOnAttributeChangeData& Data);
 
+	void SpellFireball();
+
 public:
 	UPROPERTY(BlueprintAssignable, Category = "UI|Mana")
 	FOnManaValueChanged OnManaChanged;
@@ -50,9 +52,15 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "UI|Mana")
 	FOnManaValueChanged OnMaxManaChanged;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	TSubclassOf<UGameplayAbility> FireballClass = nullptr;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<class UInputAction> IA_Fireball = nullptr;
 
 private:
 	UPROPERTY()

@@ -2,8 +2,12 @@
 
 
 #include "Player/PlayerCharacter.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "GameAbilitySystem/ResourceAttributeSet.h"
+#include "GameAbilitySystem/Utils/AbilityEnums.h"
 #include "Components/WidgetComponent.h"
+#include "EnhancedInputComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -19,6 +23,12 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	if (EnhancedInput)
+	{
+		EnhancedInput->BindAction(IA_Fireball, ETriggerEvent::Started, this, &APlayerCharacter::SpellFireball);
+	}
 }
 
 void APlayerCharacter::TestManaChange(float Amount)
@@ -30,6 +40,24 @@ void APlayerCharacter::TestManaChange(float Amount)
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+		if (FireballClass)
+		{
+			AbilitySystemComponent->GiveAbility(
+				FGameplayAbilitySpec
+				(
+					FireballClass,
+					1,
+					static_cast<int32>(EAbilityInputID::Fireball),
+					this
+				)
+			);
+		}
+	}
 
 	BindGASDelegates();
 	PushManaOnce();
@@ -64,4 +92,13 @@ void APlayerCharacter::OnManaAttrChanged(const FOnAttributeChangeData& Data)
 void APlayerCharacter::OnMaxManaAttrChanged(const FOnAttributeChangeData& Data)
 {
 	OnMaxManaChanged.Broadcast(Data.NewValue);
+}
+
+void APlayerCharacter::SpellFireball()
+{
+	UE_LOG(LogTemp, Log, TEXT("Try Spell Fireball"));
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::Fireball));
+	}
 }

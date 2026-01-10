@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
-#include "GameAbilitySystem/AttributeAccessors.h"
+#include "GameAbilitySystem/Utils/AttributeAccessors.h"
 #include "ResourceAttributeSet.generated.h"
 
 /**
