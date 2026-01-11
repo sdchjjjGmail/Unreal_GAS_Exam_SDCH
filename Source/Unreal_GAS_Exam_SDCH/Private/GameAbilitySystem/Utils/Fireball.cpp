@@ -75,7 +75,6 @@ void AFireball::OnHit(
 
 	const bool bIsBurning = TargetASC->HasMatchingGameplayTag(TAG_State_Burn);
 	const float Damage = bIsBurning ? 20.f : 10.f;
-	UE_LOG(LogTemp, Log, TEXT("bIsBurning = %d"), bIsBurning);
 	FGameplayEffectContextHandle ContextHandle = SourceASC->MakeEffectContext();
 	ContextHandle.AddHitResult(Hit);
 
