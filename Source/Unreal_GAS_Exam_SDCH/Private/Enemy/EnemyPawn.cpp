@@ -13,8 +13,10 @@ AEnemyPawn::AEnemyPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Skeletal"));
-	SkeletalMesh->SetupAttachment(GetRootComponent());
+	SkeletalMesh->SetupAttachment(RootComponent);
 
 	BarWigetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
 	BarWigetComponent->SetupAttachment(SkeletalMesh);

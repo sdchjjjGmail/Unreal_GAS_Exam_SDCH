@@ -42,5 +42,9 @@ protected:
 		const FHitResult& Hit);
 
 public:	
+	UPROPERTY(EditDefaultsOnly, Category = "GAS")
+	TSubclassOf<class UGameplayEffect> GE_Fireball_Damage;
 
+	UPROPERTY(EditDefaultsOnly, Category = "GAS")
+	TSubclassOf<class UGameplayEffect> GE_Burn;
 };
